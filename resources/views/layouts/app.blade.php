@@ -30,15 +30,13 @@
                                 <a href="">
                                     {{Auth::user()->name_customer}}
                                 </a>
-                                <a href="{{ url('/logout') }}"
-                                onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                Выйти
+                                <a id="LogOut">
+                                    Выйти
                                 </a>
         
-                                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                {{-- <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
-                                </form>
+                                </form> --}}
                             @else
                                 <a href="/login">
                                     Войти 

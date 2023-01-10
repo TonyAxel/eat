@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $shops = Shop::all();
     $productsShop = Shop::join('shop_products', 'shops.id_shop', 'shop_products.id_shop')->join('products', 'shop_products.id_product', 'products.id_product')->get();
+    //return response()->json($productsShop);
     return view('welcome', compact('productsShop', 'shops'));
 })->name('welcome');
 
@@ -36,31 +37,9 @@ Route::post('/sms', [UserController::class, 'SendSmsToUserFromRegistration'])->n
 
 Route::post('/valid-sms', [UserController::class, 'validateSmsToUserFromRegistration'])->name('validSMS');
 
-Route::post('/add-customer', function (Request $request){
-    $validator = $request->validate([
-        'nameCustomer' => 'required',
-        'sernameCustomer' => 'required',
-        'fatherName' => 'required'
-    ]);
+Route::post('/add-customer', [UserController::class, 'addCasstomertoDB'])->name('addCustomertoDB');
 
-    $user = User::create([
-        'name_customer' => $request->nameCustomer,
-        'sername' => $request->sernameCustomer,
-        'father_name' => $request->fatherName,
-        'phone_number' => session('phone')
-    ]);
-    if($user){
-        Auth::login($user);
-        return redirect()->route('welcome');
-    }
-
-    return redirect(route('login'));
-});
-
-Route::post('/logout', function (Request $request){
-    Auth::logout();
-    return redirect()->back();
-});
+Route::post('/logout', [UserController::class, 'logoutCustomer'])->name('logoutCustomer');
 
 Route::get('/cart', function (){
     return view('cart');

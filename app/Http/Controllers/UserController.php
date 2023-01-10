@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\SmsaeroApiV2Service;
+use Illuminate\Support\Facades\Auth;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,5 +40,35 @@ class UserController extends Controller
             return response()->json(['errors' => 'SmsDoNotMatch', 'status' => 'error']);
         }
         return response()->json(['status' => 'ok']);
+    }
+
+    public function addCasstomertoDB(Request $request){
+        $validator = $request->validate([
+            'nameCustomer' => 'required',
+            'sernameCustomer' => 'required',
+            'fatherName' => 'required'
+        ]);
+    
+        $user = User::create([
+            'name_customer' => $request->nameCustomer,
+            'sername' => $request->sernameCustomer,
+            'father_name' => $request->fatherName,
+            'phone_number' => session('phone')
+        ]);
+        if($user){
+            Auth::login($user);
+            //return response()->json(['status' => 'ok']);
+            return redirect()->route('welcome');
+        }
+    
+        return redirect(route('login'));
+    }
+
+    public function logoutCustomer(){
+        Auth::logout();
+        return redirect()->back();
+    }
+    public function cartUser(){
+        $userID = Auth::id();
     }
 }

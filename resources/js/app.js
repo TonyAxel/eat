@@ -2,6 +2,17 @@ import './bootstrap';
 
 
 if(document.location.pathname == '/'){
+    let csrfToken = document.head.querySelector('meta[name="csrf-token"]');
+    const logout = document.getElementById('LogOut');
+    
+    logout.onclick = async () => {
+        await fetch('/logout', {
+            method: 'post',
+            headers:{
+                "X-CSRF-Token": csrfToken.content
+            }
+        });
+    };
 
     const dropdownCategory = document.getElementById('dropdownCategory');
 
